@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  <input type="password" name="senha" placeholder="Senha" required>
                  <button type="submit">Entrar</button>
                  <div class="esqueciSenha">
-                        <a href="../loginSenha/esqueciasenha.html">Esqueci a Senha</a>
+                        <a href="../loginSenha/esqueci_senha.php">Esqueci a Senha</a>
                         <!-- <a href="">Não possui cadastro? Clique aqui!</a> -->
                         </div>  
               </form>
