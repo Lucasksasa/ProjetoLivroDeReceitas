@@ -1,5 +1,11 @@
 <?php
 require_once '../BancoDeDados/conexao.php';
+require '../vendor/autoload.php'; // se usou composer
+// ou: require '../path/to/PHPMailer.php'; etc. se for manual
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -30,7 +36,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mensagem = "Olá! Clique no link abaixo para redefinir sua senha:\n\n$link\n\nEsse link expira em 1 hora.";
         $cabecalhos = "From: no-reply@codigodesabores.com";
 
-        mail($email, $assunto, $mensagem, $cabecalhos);
+        $mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host = 'smtp.seuprovedor.com'; // Ex: smtp.gmail.com
+    $mail->SMTPAuth = true;
+    $mail->Username = 'seuemail@provedor.com'; 
+    $mail->Password = 'sua_senha';
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+
+    $mail->setFrom('no-reply@codigodesabores.com', 'Código de Sabores');
+    $mail->addAddress($email);
+
+    $mail->isHTML(true);
+    $mail->Subject = $assunto;
+    $mail->Body = nl2br($mensagem); // ou crie um HTML estilizado
+
+    $mail->send();
+} catch (Exception $e) {
+    echo "Erro ao enviar e-mail: {$mail->ErrorInfo}";
+}
 
         echo "<script>alert('Um link foi enviado para seu e-mail!'); window.location.href = 'login.php';</script>";
     } else {
