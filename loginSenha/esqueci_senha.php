@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-box">
             <h2>Recuperar Senha</h2>
             <p>Digite seu e-mail para receber um link de redefinição de senha.</p>
-            <form action="#" method="POST" onsubmit="showNotification(); return false;">
+            <form action="" method="POST">
                 <div class="input-group">
                     <input type="email" name="email" placeholder="Digite seu e-mail" required>
                 </div>
