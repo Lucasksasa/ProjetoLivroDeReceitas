@@ -1,4 +1,11 @@
 <?php
+require_once '../BancoDeDados/conexao.php';
+require_once '../dompdf/autoload.inc.php';
+
+// Pega o ID da URL. Se não houver, redireciona.
+$id_livro = $_GET['id'] ?? null;
+if (!$id_livro) {
+    header("Location: listar_livros.php");
 session_start();
 require_once '../BancoDeDados/conexao.php';
 
