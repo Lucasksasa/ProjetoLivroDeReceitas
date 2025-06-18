@@ -30,24 +30,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtInsert->execute();
 
         // Envia o e-mail (simples usando mail() – pode usar PHPMailer também)
-        $link = "http://localhost/ProjetoLivroDeReceitas/LoginSenha/redefinir_senha.php?token=$token";
+        $link = "http://localhost:8000/LoginSenha/redefinir_senha.php?token=$token";
 
         $assunto = "Redefinição de Senha - Código de Sabores";
         $mensagem = "Olá! Clique no link abaixo para redefinir sua senha:\n\n$link\n\nEsse link expira em 1 hora.";
-        $cabecalhos = "From: no-reply@codigodesabores.com";
+        $cabecalhos = "From: codigodesabores@gmail.com";
 
         $mail = new PHPMailer(true);
 
 try {
     $mail->isSMTP();
-    $mail->Host = 'smtp.seuprovedor.com'; // Ex: smtp.gmail.com
+    $mail->Host = 'smtp.gmail.com'; // Ex: smtp.gmail.com
     $mail->SMTPAuth = true;
-    $mail->Username = 'seuemail@provedor.com'; 
-    $mail->Password = 'sua_senha';
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
+    $mail->Username = 'lucasferrari.blz2028@gmail.com'; 
+    $mail->Password = 'beat pwfn vkpa pilq';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
 
-    $mail->setFrom('no-reply@codigodesabores.com', 'Código de Sabores');
+    $mail->setFrom('codigodesabores@gmail.com', 'Código de Sabores');
     $mail->addAddress($email);
 
     $mail->isHTML(true);

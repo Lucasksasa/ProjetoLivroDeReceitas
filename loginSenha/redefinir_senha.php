@@ -24,13 +24,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($nova_senha !== $confirmar) {
         echo "<script>alert('Senhas não coincidem!');</script>";
     } else {
-        // Atualiza a senha no banco (procura pelo e-mail do token)
+        // Revalida o token para obter o e-mail
         $dados = $stmt->fetch(PDO::FETCH_ASSOC);
         $email = $dados['email'];
 
+        // Criptografa a senha
+        $hash = password_hash($nova_senha, PASSWORD_DEFAULT);
+
         $update = "UPDATE logins SET senha = :senha WHERE email = :email";
         $stmtUpdate = $conn->prepare($update);
-        $stmtUpdate->bindParam(":senha", $nova_senha); // Idealmente, use hash
+        $stmtUpdate->bindParam(":senha", $hash);
         $stmtUpdate->bindParam(":email", $email);
         $stmtUpdate->execute();
 
@@ -51,10 +54,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Redefinir Senha</title>
     <link rel="stylesheet" href="../styles/redefinir.css">
+    <script>
+    function validarSenha() {
+        const senha = document.querySelector('[name="nova_senha"]').value;
+        const erros = [];
+
+        if (senha.length < 8) erros.push("mínimo de 8 caracteres");
+        if (!/[A-Z]/.test(senha)) erros.push("1 letra maiúscula");
+        if (!/[a-z]/.test(senha)) erros.push("1 letra minúscula");
+        if (!/[0-9]/.test(senha)) erros.push("1 número");
+        if (!/[!@#$%^&*]/.test(senha)) erros.push("1 caractere especial");
+
+        if (erros.length > 0) {
+            alert("A senha precisa conter: " + erros.join(", "));
+            return false;
+        }
+        return true;
+    }
+    </script>
 </head>
 <body>
     <h2>Redefinir Senha</h2>
-    <form method="POST">
+    <form method="POST" onsubmit="return validarSenha();">
         <input type="password" name="nova_senha" placeholder="Nova senha" required>
         <input type="password" name="confirmar" placeholder="Confirme a nova senha" required>
         <button type="submit">Redefinir</button>
