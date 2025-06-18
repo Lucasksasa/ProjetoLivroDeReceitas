@@ -28,12 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dados = $stmt->fetch(PDO::FETCH_ASSOC);
         $email = $dados['email'];
 
-        // Criptografa a senha
-        $hash = password_hash($nova_senha, PASSWORD_DEFAULT);
-
+        // Não faça hash, só salva a senha simples
         $update = "UPDATE logins SET senha = :senha WHERE email = :email";
         $stmtUpdate = $conn->prepare($update);
-        $stmtUpdate->bindParam(":senha", $hash);
+        $stmtUpdate->bindParam(":senha", $nova_senha);  // Salva senha simples
         $stmtUpdate->bindParam(":email", $email);
         $stmtUpdate->execute();
 
