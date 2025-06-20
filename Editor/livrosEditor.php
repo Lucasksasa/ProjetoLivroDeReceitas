@@ -12,15 +12,12 @@ if (!isset($_SESSION['id_funcionario'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['excluir'])) {
     $id_livro = $_POST['excluir'];
 
-    // Começa a transação para apagar livro e receitas associadas
     $conn->beginTransaction();
 
     try {
-        // Apaga registros na tabela livro_receita
         $stmt = $conn->prepare("DELETE FROM livro_receita WHERE id_livro = ?");
         $stmt->execute([$id_livro]);
 
-        // Apaga livro
         $stmt = $conn->prepare("DELETE FROM livros WHERE id_livro = ?");
         $stmt->execute([$id_livro]);
 
@@ -133,8 +130,7 @@ $livros = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Livros Editor</title>
     <link rel="stylesheet" href="../styles/livrosEDITOR.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="shortcut icon" href="../assets/favicon.png">
 </head>
 <body>
@@ -143,7 +139,7 @@ $livros = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <h1 class="logo">Código de Sabores</h1>
             <nav>
                 <a href="livrosEditor.php">Livros</a>
-                <a href="gerarPDF.php">Gerar PDF</a>
+                <!-- Removido link simples para gerarPDF.php -->
             </nav>
         </div>
 
@@ -160,7 +156,7 @@ $livros = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <label>Selecione as Receitas:</label>
                 <select name="receitas[]" multiple size="5" required>
                     <?php foreach ($receitasDisponiveis as $receita): ?>
-                        <option value="<?= htmlspecialchars($receita['nome_receita']) ?>" 
+                        <option value="<?= htmlspecialchars($receita['nome_receita']) ?>"
                             <?= in_array($receita['nome_receita'], $receitas_livro) ? 'selected' : '' ?>>
                             <?= htmlspecialchars($receita['nome_receita']) ?>
                         </option>
@@ -203,21 +199,21 @@ $livros = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($livro['descricao']) ?></td>
                             <td><?= htmlspecialchars($livro['id_funcionario']) ?></td>
                             <td>
-  <div class="action-buttons">
-    <a href="visualizarLivros.php?id=<?= htmlspecialchars($livro['id_livro']) ?>" class="view-button" title="Visualizar">
-        <i class="fas fa-eye"></i>
-    </a>
-    <a href="editar_livro.php?id=<?= htmlspecialchars($livro['id_livro']) ?>" class="edit-button" title="Editar">
-        <i class="fas fa-pencil-alt"></i>
-    </a>
-    <a href="excluir_livro.php?id=<?= htmlspecialchars($livro['id_livro']) ?>" class="delete-button" title="Excluir">
-        <i class="fas fa-trash"></i>
-    </a>
-</div>
-
-</td>
-
-                                </form>
+                                <div class="action-buttons">
+                                    <a href="visualizarLivros.php?id=<?= htmlspecialchars($livro['id_livro']) ?>" class="view-button" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="editar_livro.php?id=<?= htmlspecialchars($livro['id_livro']) ?>" class="edit-button" title="Editar">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a href="excluir_livro.php?id=<?= htmlspecialchars($livro['id_livro']) ?>" class="delete-button" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <!-- Novo link para gerar PDF -->
+                                    <a href="gerarPDF.php?id_livro=<?= htmlspecialchars($livro['id_livro']) ?>" target="_blank" class="pdf-button" title="Gerar PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach ?>
